@@ -16,7 +16,7 @@ syntax = "proto3";
 {{end}}
 package {{.Package}};
 {{range .Imports}}
-import "{{.}}"
+import "{{.}}";
 {{end}}
 {{if not .IgnoreEnum }}
 {{range .Enums}}
