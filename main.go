@@ -39,7 +39,7 @@ var paramLuaTabHeader = flag.String("luatabheader", "", "output string to lua ta
 var paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
 var paramPackageName = flag.String("package", "", "override the package name in table @Types")
 var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files paths (*.proto)")
-var paramProtoIgnoreEnum = flag.Bool("protoignoreenum", false, "output .proto ignore enum define (*.proto)")
+var paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "output .proto ignore files (*.proto)")
 
 const Version = "2.8.7"
 
@@ -77,14 +77,14 @@ func main() {
 		g.LuaTabHeader = *paramLuaTabHeader
 		g.GenCSSerailizeCode = *paramGenCSharpBinarySerializeCode
 		g.PackageName = *paramPackageName
-		g.ProtoIgnoreEnum = *paramProtoIgnoreEnum
 
 		if *paramProtoImportFiles != "" {
 			g.ProtoImportFiles = strings.Split(*paramProtoImportFiles, ",")
 		}
 
-		fmt.Println(fmt.Sprintf("g.ProtoIgnoreEnum: %v", g.ProtoIgnoreEnum))
-		fmt.Println(fmt.Sprintf("g.ProtoImportFiles: %v", g.ProtoImportFiles))
+		if *paramProtoOutputIgnoreFiles != "" {
+			g.ProtoOutputIgnoreFiles = strings.Split(*paramProtoOutputIgnoreFiles, ",")
+		}
 
 		if *paramProtoOut != "" {
 			g.AddOutputType("proto", *paramProtoOut)

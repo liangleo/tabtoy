@@ -18,7 +18,6 @@ package {{.Package}};
 {{range .Imports}}
 import "{{.}}";
 {{end}}
-{{if not .IgnoreEnum }}
 {{range .Enums}}
 // Defined in table: {{.DefinedTable}}
 enum {{.Name}}
@@ -28,7 +27,6 @@ enum {{.Name}}
 	{{.Name}} = {{.Number}}; {{.Comment}}
 {{end}}
 }
-{{end}}
 {{end}}
 {{range .Messages}}
 // Defined in table: {{.DefinedTable}}
@@ -100,19 +98,19 @@ type protoFileModel struct {
 	Messages     []protoDescriptor
 	Enums        []protoDescriptor
 	Imports      []string
-	IgnoreEnum   bool
+	IgnoreFiles  []string
 }
 
-type protoPrinter struct {
-}
-
-func (self *protoPrinter) matchTag(tags []string, tag string) bool {
-	for _, v := range tags {
-		if v == tag {
+func (self *protoFileModel) isIgnoreFile(name string) bool {
+	for _, v := range self.IgnoreFiles {
+		if v == name {
 			return true
 		}
 	}
 	return false
+}
+
+type protoPrinter struct {
 }
 
 func (self *protoPrinter) Run(g *Globals) *Stream {
@@ -129,12 +127,18 @@ func (self *protoPrinter) Run(g *Globals) *Stream {
 	m.ProtoVersion = g.ProtoVersion
 	m.ToolVersion = g.Version
 	m.Imports = g.ProtoImportFiles
-	m.IgnoreEnum = g.ProtoIgnoreEnum
+	m.IgnoreFiles = g.ProtoOutputIgnoreFiles
 
 	// 遍历所有类型
 	for _, d := range g.FileDescriptor.Descriptors {
 
-		// 这个被限制输出
+		// 这个文件被限制输出
+		if m.isIgnoreFile(d.File.Name) {
+			log.Infof("%s: %s", i18n.String(i18n.Printer_IgnoredByOutputTag), d.Name)
+			continue
+		}
+
+		// 这个文件被限制输出
 		if !d.File.MatchTag(".proto") {
 			log.Infof("%s: %s", i18n.String(i18n.Printer_IgnoredByOutputTag), d.Name)
 			continue

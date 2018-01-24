@@ -11,16 +11,16 @@ type TableIndex struct {
 }
 
 type Globals struct {
-	Version            string
-	InputFileList      []interface{}
-	ParaMode           bool
-	ProtoVersion       int
-	LuaEnumIntValue    bool
-	LuaTabHeader       string
-	GenCSSerailizeCode bool
-	PackageName        string
-	ProtoImportFiles   []string
-	ProtoIgnoreEnum    bool
+	Version                string
+	InputFileList          []interface{}
+	ParaMode               bool
+	ProtoVersion           int
+	LuaEnumIntValue        bool
+	LuaTabHeader           string
+	GenCSSerailizeCode     bool
+	PackageName            string
+	ProtoImportFiles       []string
+	ProtoOutputIgnoreFiles []string
 
 	Printers []*PrinterContext
 
