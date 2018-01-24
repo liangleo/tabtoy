@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/davyxu/golog"
 	"github.com/davyxu/tabtoy/v2"
@@ -37,6 +38,8 @@ var paramLuaEnumIntValue = flag.Bool("luaenumintvalue", false, "use int type in 
 var paramLuaTabHeader = flag.String("luatabheader", "", "output string to lua tab header")
 var paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
 var paramPackageName = flag.String("package", "", "override the package name in table @Types")
+var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files paths (*.proto)")
+var paramProtoIgnoreEnum = flag.Bool("protoignoreenum", false, "output .proto ignore enum define (*.proto)")
 
 const Version = "2.8.7"
 
@@ -74,6 +77,14 @@ func main() {
 		g.LuaTabHeader = *paramLuaTabHeader
 		g.GenCSSerailizeCode = *paramGenCSharpBinarySerializeCode
 		g.PackageName = *paramPackageName
+		g.ProtoIgnoreEnum = *paramProtoIgnoreEnum
+
+		if *paramProtoImportFiles != "" {
+			g.ProtoImportFiles = strings.Split(*paramProtoImportFiles, ",")
+		}
+
+		fmt.Println(fmt.Sprintf("g.ProtoIgnoreEnum: %v", g.ProtoIgnoreEnum))
+		fmt.Println(fmt.Sprintf("g.ProtoImportFiles: %v", g.ProtoImportFiles))
 
 		if *paramProtoOut != "" {
 			g.AddOutputType("proto", *paramProtoOut)

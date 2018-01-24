@@ -19,6 +19,8 @@ type Globals struct {
 	LuaTabHeader       string
 	GenCSSerailizeCode bool
 	PackageName        string
+	ProtoImportFiles   []string
+	ProtoIgnoreEnum    bool
 
 	Printers []*PrinterContext
 
