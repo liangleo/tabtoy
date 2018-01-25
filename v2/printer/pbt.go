@@ -1,9 +1,11 @@
 package printer
 
 import (
+	"strconv"
+
+	"github.com/davyxu/tabtoy/util"
 	"github.com/davyxu/tabtoy/v2/i18n"
 	"github.com/davyxu/tabtoy/v2/model"
-	"github.com/davyxu/tabtoy/util"
 )
 
 func valueWrapperPbt(t model.FieldType, node *model.Node) string {
@@ -11,6 +13,8 @@ func valueWrapperPbt(t model.FieldType, node *model.Node) string {
 	switch t {
 	case model.FieldType_String:
 		return util.StringEscape(node.Value)
+	case model.FieldType_Enum:
+		return strconv.Itoa(int(node.EnumValue))
 	}
 
 	return node.Value
@@ -55,6 +59,14 @@ func printTablePBT(bf *Stream, tab *model.Table) bool {
 
 		// 遍历每一列
 		for rootFieldIndex, node := range r.Nodes {
+
+			if node.SugguestIgnore {
+				continue
+			}
+
+			if node.Child == nil || len(node.Child) == 0 {
+				continue
+			}
 
 			if node.IsRepeated {
 				bf.Printf("%s:[ ", node.Name)
