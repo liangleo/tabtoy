@@ -21,6 +21,7 @@ type Globals struct {
 	PackageName            string
 	ProtoImportFiles       []string
 	ProtoOutputIgnoreFiles []string
+	JsonOutputFields       [][]string
 
 	Printers []*PrinterContext
 

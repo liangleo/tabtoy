@@ -42,7 +42,7 @@ func (self *jsonPrinter) Run(g *Globals) *Stream {
 			bf.Printf(", \n")
 		}
 
-		if !printTableJson(bf, tab) {
+		if !printTableJson(bf, tab, g.JsonOutputFields[tabIndex]) {
 			return nil
 		}
 
@@ -53,9 +53,20 @@ func (self *jsonPrinter) Run(g *Globals) *Stream {
 	return bf
 }
 
-func printTableJson(bf *Stream, tab *model.Table) bool {
+func inArray(field string, fields []string) bool {
+	for _, v := range fields {
+		if v == field {
+			return true
+		}
+	}
+	return false
+}
+
+func printTableJson(bf *Stream, tab *model.Table, outputFields []string) bool {
 
 	bf.Printf("	\"%s\":[\n", tab.LocalFD.Name)
+
+	columnIgnoreTag := make(map[int]bool)
 
 	// 遍历每一行
 	for rIndex, r := range tab.Recs {
@@ -66,6 +77,14 @@ func printTableJson(bf *Stream, tab *model.Table) bool {
 
 		// 遍历每一列
 		for rootFieldIndex, node := range r.Nodes {
+
+			if rIndex == 0 && inArray(node.Name, outputFields) {
+				columnIgnoreTag[rootFieldIndex] = true
+			}
+
+			if _, ok := columnIgnoreTag[rootFieldIndex]; !ok {
+				continue
+			}
 
 			if node.SugguestIgnore {
 				continue
