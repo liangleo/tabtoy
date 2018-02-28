@@ -42,7 +42,7 @@ var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files 
 var paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
 var paramJsonOutputFields = flag.String("jsonoutputfield", "", "output .json fields (*.json)")
 
-const Version = "2.8.7"
+const Version = "2.8.9"
 
 func main() {
 
