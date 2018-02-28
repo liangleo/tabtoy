@@ -66,7 +66,7 @@ func printTableJson(bf *Stream, tab *model.Table, outputFields []string) bool {
 
 	bf.Printf("	\"%s\":[\n", tab.LocalFD.Name)
 
-	columnIgnoreTag := make(map[int]bool)
+	columnOutputTag := make(map[int]bool)
 
 	// 遍历每一行
 	for rIndex, r := range tab.Recs {
@@ -78,16 +78,36 @@ func printTableJson(bf *Stream, tab *model.Table, outputFields []string) bool {
 		// 遍历每一列
 		for rootFieldIndex, node := range r.Nodes {
 
-			if rIndex == 0 && inArray(node.Name, outputFields) {
-				columnIgnoreTag[rootFieldIndex] = true
+			if rIndex == 0 {
+				if len(outputFields) == 0 || inArray(node.Name, outputFields) {
+					columnOutputTag[rootFieldIndex] = true
+				}
 			}
 
-			if _, ok := columnIgnoreTag[rootFieldIndex]; !ok {
+			if _, ok := columnOutputTag[rootFieldIndex]; !ok {
 				continue
 			}
 
 			if node.SugguestIgnore {
 				continue
+			}
+
+			if node.Child == nil || len(node.Child) == 0 {
+				continue
+			}
+
+			if node.Type == model.FieldType_Struct {
+				// 判断结构体字段是否为空
+				canOutput := false
+				for _, v := range node.Child {
+					if len(v.Child) > 0 {
+						canOutput = true
+						break
+					}
+				}
+				if !canOutput {
+					continue
+				}
 			}
 
 			if hasWriteColumn && rootFieldIndex > 0 {

@@ -91,7 +91,9 @@ func main() {
 			temp := strings.Split(*paramJsonOutputFields, ";")
 			g.JsonOutputFields = make([][]string, len(temp))
 			for k, v := range temp {
-				g.JsonOutputFields[k] = strings.Split(v, ",")
+				if v != "" {
+					g.JsonOutputFields[k] = strings.Split(v, ",")
+				}
 			}
 		}
 
