@@ -37,6 +37,13 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 			currFV = fv
 
 			var sugguestIgnore bool
+			var clientIgnore bool
+
+			// 判断是否指导出到服务端配置中
+			if fv.FieldDef.Meta.GetBool("ServerOnly") {
+				clientIgnore = true
+			}
+
 			// repeated的, 没有填充的, 直接跳过, 不生成数据
 			if fv.RawValue == "" && fv.FieldDef.Meta.GetString("Default") == "" {
 
@@ -78,7 +85,7 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 
 			}
 
-			if !coloumnProcessor(checker, record, fv.FieldDef, fv.RawValue, sugguestIgnore) {
+			if !coloumnProcessor(checker, record, fv.FieldDef, fv.RawValue, sugguestIgnore, clientIgnore) {
 				goto ErrorStop
 			}
 

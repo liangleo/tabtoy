@@ -38,9 +38,9 @@ var paramLuaEnumIntValue = flag.Bool("luaenumintvalue", false, "use int type in 
 var paramLuaTabHeader = flag.String("luatabheader", "", "output string to lua tab header")
 var paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
 var paramPackageName = flag.String("package", "", "override the package name in table @Types")
+var paramClientOnly = flag.Bool("client_only", false, "output client config only (*.json)")
 var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files paths (*.proto)")
 var paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
-var paramJsonOutputFields = flag.String("jsonoutputfield", "", "output .json fields (*.json)")
 
 const Version = "2.8.9"
 
@@ -78,6 +78,7 @@ func main() {
 		g.LuaTabHeader = *paramLuaTabHeader
 		g.GenCSSerailizeCode = *paramGenCSharpBinarySerializeCode
 		g.PackageName = *paramPackageName
+		g.ParamClientOnly = *paramClientOnly
 
 		if *paramProtoImportFiles != "" {
 			g.ProtoImportFiles = strings.Split(*paramProtoImportFiles, ",")
@@ -85,16 +86,6 @@ func main() {
 
 		if *paramProtoOutputIgnoreFiles != "" {
 			g.ProtoOutputIgnoreFiles = strings.Split(*paramProtoOutputIgnoreFiles, ";")
-		}
-
-		if *paramJsonOutputFields != "" {
-			temp := strings.Split(*paramJsonOutputFields, ";")
-			g.JsonOutputFields = make([][]string, len(temp))
-			for k, v := range temp {
-				if v != "" {
-					g.JsonOutputFields[k] = strings.Split(v, ",")
-				}
-			}
 		}
 
 		if *paramProtoOut != "" {

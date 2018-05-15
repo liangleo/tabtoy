@@ -13,6 +13,7 @@ type Node struct {
 	Child []*Node // 优先遍历值, 再key
 
 	SugguestIgnore bool //  建议忽略, 非repeated的普通字段导出时, 如果原单元格没填, 这个字段为true
+	ClientIgnore   bool // 客户端忽略, 如果原单元格没填, 这个字段为 false
 }
 
 func (self *Node) AddValue(value string) *Node {

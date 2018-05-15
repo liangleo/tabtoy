@@ -8,7 +8,7 @@ import (
 	"github.com/davyxu/tabtoy/v2/model"
 )
 
-func coloumnProcessor(file model.GlobalChecker, record *model.Record, fd *model.FieldDescriptor, raw string, sugguestIgnore bool) bool {
+func coloumnProcessor(file model.GlobalChecker, record *model.Record, fd *model.FieldDescriptor, raw string, sugguestIgnore, clientIgnore bool) bool {
 
 	spliter := fd.ListSpliter()
 
@@ -46,6 +46,7 @@ func coloumnProcessor(file model.GlobalChecker, record *model.Record, fd *model.
 		node := record.NewNodeByDefine(fd)
 
 		node.SugguestIgnore = sugguestIgnore
+		node.ClientIgnore = clientIgnore
 
 		// 结构体要多添加一个节点, 处理repeated 结构体情况
 		if fd.Type == model.FieldType_Struct {
@@ -55,6 +56,7 @@ func coloumnProcessor(file model.GlobalChecker, record *model.Record, fd *model.
 		}
 
 		node.SugguestIgnore = sugguestIgnore
+		node.ClientIgnore = clientIgnore
 
 		if !dataProcessor(file, fd, raw, node) {
 			return false
