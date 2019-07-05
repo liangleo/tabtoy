@@ -1,0 +1,15 @@
+github.com/davyxu/golexer v0.0.0-20180314091252-f048a86ae200 h1:qLWlQBFg5c7HUOK+UdoGouLzRaYBQr2WwoAqixU+eik=
+github.com/davyxu/golexer v0.0.0-20180314091252-f048a86ae200/go.mod h1:K/1PVWqaQEwMs+N+VvaoS66o1BAAwso+jEgXKBIa8QY=
+github.com/davyxu/golog v0.0.0-20190227055902-72e4f3de2d15 h1:9mMn/WaMMyhhSXdrNNUvAr10/TRhvgybxZOk7p3MByg=
+github.com/davyxu/golog v0.0.0-20190227055902-72e4f3de2d15/go.mod h1:YwChkFY5dCYt77yuPlWjcR6KlWqVJNbz3WkwC/8WgQk=
+github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
+github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
+github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
+github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
+github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/tealeg/xlsx v1.0.3 h1:BXsDIQYBPq2HgbwUxrsVXIrnO0BDxmsdUfHSfvwfBuQ=
+github.com/tealeg/xlsx v1.0.3/go.mod h1:uxu5UY2ovkuRPWKQ8Q7JG0JbSivrISjdPzZQKeo74mA=
+github.com/tealeg/xlsx v1.0.4-0.20190403005744-5e5a1f988ab6 h1:/b/ajM1FVy2x9zyboq3TtdYGhqaMK675MYwTmaR+A5A=
+github.com/tealeg/xlsx v1.0.4-0.20190403005744-5e5a1f988ab6/go.mod h1:uxu5UY2ovkuRPWKQ8Q7JG0JbSivrISjdPzZQKeo74mA=
+gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
+gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

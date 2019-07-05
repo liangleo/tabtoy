@@ -15,7 +15,20 @@ const (
 
 // 导出适合配置格式的表格
 func (self *DataSheet) exportColumnMajor(file *File, dataModel *model.DataModel, dataHeader, parentHeader *DataHeader) bool {
+	index := ColumnMajor_ColumnValue
+	for {
+		line, ok := self.columnMajor(dataHeader, index)
+		if !ok {
+			break
+		}
+		dataModel.Add(line)
+		index++
+	}
+	return true
 
+}
+
+func (self *DataSheet) columnMajor(dataHeader *DataHeader, index int) (*model.LineData, bool) {
 	// 是否继续读行
 	var readingLine bool = true
 
@@ -64,7 +77,10 @@ func (self *DataSheet) exportColumnMajor(file *File, dataModel *model.DataModel,
 			continue
 		}
 
-		rawValue := self.GetCellData(self.Row, ColumnMajor_ColumnValue)
+		rawValue := self.GetCellData(self.Row, index)
+		if self.Row == ColumnMajor_RowDataBegin && rawValue == "" {
+			return nil, false
+		}
 
 		r, c := self.GetRC()
 
@@ -80,8 +96,5 @@ func (self *DataSheet) exportColumnMajor(file *File, dataModel *model.DataModel,
 
 	}
 
-	dataModel.Add(line)
-
-	return true
-
+	return line, true
 }

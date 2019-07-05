@@ -149,7 +149,13 @@ func (self *protoPrinter) Run(g *Globals) *Stream {
 		protoD.file = &m
 
 		// 遍历字段
+		delta := 0
 		for index, fd := range d.Fields {
+
+			if fd.Meta.GetBool("Memo") {
+				delta += 1
+				continue
+			}
 
 			// 对CombineStruct的XXDefine对应的字段
 			if d.Usage == model.DescriptorUsage_CombineStruct {
@@ -165,7 +171,7 @@ func (self *protoPrinter) Run(g *Globals) *Stream {
 
 			switch d.Kind {
 			case model.DescriptorKind_Struct:
-				field.Number = index + 1
+				field.Number = index + 1 - delta
 			case model.DescriptorKind_Enum:
 				field.Number = int(fd.EnumValue)
 			}

@@ -1,8 +1,9 @@
 package v2
 
 import (
-	"github.com/tealeg/xlsx"
 	"strings"
+
+	"github.com/tealeg/xlsx"
 )
 
 // 描述一个表单

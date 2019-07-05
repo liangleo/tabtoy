@@ -42,7 +42,7 @@ var paramClientOnly = flag.Bool("client_only", false, "output client config only
 var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files paths (*.proto)")
 var paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
 
-const Version = "2.8.9"
+const Version = "2.8.9.20190705"
 
 func main() {
 

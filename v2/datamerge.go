@@ -39,7 +39,11 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 			var sugguestIgnore bool
 			var clientIgnore bool
 
-			// 判断是否指导出到服务端配置中
+			// 判断是否导出到所有端配置中
+			if fv.FieldDef.Meta.GetBool("Memo") {
+				sugguestIgnore = true
+			}
+			// 判断是否只导出到服务端配置中
 			if fv.FieldDef.Meta.GetBool("ServerOnly") {
 				clientIgnore = true
 			}
