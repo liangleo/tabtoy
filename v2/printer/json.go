@@ -42,7 +42,7 @@ func (self *jsonPrinter) Run(g *Globals) *Stream {
 			bf.Printf(", \n")
 		}
 
-		if !printTableJson(bf, tab, g.ParamClientOnly) {
+		if !printTableJson(bf, tab) {
 			return nil
 		}
 
@@ -53,16 +53,7 @@ func (self *jsonPrinter) Run(g *Globals) *Stream {
 	return bf
 }
 
-func inArray(field string, fields []string) bool {
-	for _, v := range fields {
-		if v == field {
-			return true
-		}
-	}
-	return false
-}
-
-func printTableJson(bf *Stream, tab *model.Table, clientOnly bool) bool {
+func printTableJson(bf *Stream, tab *model.Table) bool {
 
 	bf.Printf("	\"%s\":[\n", tab.LocalFD.Name)
 
@@ -76,30 +67,8 @@ func printTableJson(bf *Stream, tab *model.Table, clientOnly bool) bool {
 		// 遍历每一列
 		for rootFieldIndex, node := range r.Nodes {
 
-			if clientOnly && node.ClientIgnore {
-				continue
-			}
-
 			if node.SugguestIgnore {
 				continue
-			}
-
-			if node.Child == nil || len(node.Child) == 0 {
-				continue
-			}
-
-			if node.Type == model.FieldType_Struct {
-				// 判断结构体字段是否为空
-				canOutput := false
-				for _, v := range node.Child {
-					if len(v.Child) > 0 {
-						canOutput = true
-						break
-					}
-				}
-				if !canOutput {
-					continue
-				}
 			}
 
 			if hasWriteColumn && rootFieldIndex > 0 {

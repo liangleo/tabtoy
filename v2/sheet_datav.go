@@ -15,20 +15,7 @@ const (
 
 // 导出适合配置格式的表格
 func (self *DataSheet) exportColumnMajor(file *File, dataModel *model.DataModel, dataHeader, parentHeader *DataHeader) bool {
-	index := ColumnMajor_ColumnValue
-	for {
-		line, ok := self.columnMajor(dataHeader, index)
-		if !ok {
-			break
-		}
-		dataModel.Add(line)
-		index++
-	}
-	return true
 
-}
-
-func (self *DataSheet) columnMajor(dataHeader *DataHeader, index int) (*model.LineData, bool) {
 	// 是否继续读行
 	var readingLine bool = true
 
@@ -58,7 +45,7 @@ func (self *DataSheet) columnMajor(dataHeader *DataHeader, index int) (*model.Li
 			if meetEmptyLine && !warningAfterEmptyLineDataOnce {
 				r, _ := self.GetRC()
 
-				log.Warnf("%s %s|%s(%s)", i18n.String(i18n.DataSheet_RowDataSplitedByEmptyLine), self.file.FileName, self.Name, util.ConvR1C1toA1(r, 1))
+				log.Warnf("%s %s|%s(%s)", i18n.String(i18n.DataSheet_RowDataSplitedByEmptyLine), self.file.FileName, self.Name, util.R1C1ToA1(r, 1))
 
 				warningAfterEmptyLineDataOnce = true
 			}
@@ -77,10 +64,7 @@ func (self *DataSheet) columnMajor(dataHeader *DataHeader, index int) (*model.Li
 			continue
 		}
 
-		rawValue := self.GetCellData(self.Row, index)
-		if self.Row == ColumnMajor_RowDataBegin && rawValue == "" {
-			return nil, false
-		}
+		rawValue := self.GetCellData(self.Row, ColumnMajor_ColumnValue)
 
 		r, c := self.GetRC()
 
@@ -96,5 +80,8 @@ func (self *DataSheet) columnMajor(dataHeader *DataHeader, index int) (*model.Li
 
 	}
 
-	return line, true
+	dataModel.Add(line)
+
+	return true
+
 }

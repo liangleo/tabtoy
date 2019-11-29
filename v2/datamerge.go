@@ -37,17 +37,6 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 			currFV = fv
 
 			var sugguestIgnore bool
-			var clientIgnore bool
-
-			// 判断是否导出到所有端配置中
-			if fv.FieldDef.Meta.GetBool("Memo") {
-				sugguestIgnore = true
-			}
-			// 判断是否只导出到服务端配置中
-			if fv.FieldDef.Meta.GetBool("ServerOnly") {
-				clientIgnore = true
-			}
-
 			// repeated的, 没有填充的, 直接跳过, 不生成数据
 			if fv.RawValue == "" && fv.FieldDef.Meta.GetString("Default") == "" {
 
@@ -89,7 +78,7 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 
 			}
 
-			if !coloumnProcessor(checker, record, fv.FieldDef, fv.RawValue, sugguestIgnore, clientIgnore) {
+			if !coloumnProcessor(checker, record, fv.FieldDef, fv.RawValue, sugguestIgnore) {
 				goto ErrorStop
 			}
 
@@ -106,7 +95,7 @@ ErrorStop:
 		return false
 	}
 
-	log.Errorf("%s|%s(%s)", currFV.FileName, currFV.SheetName, util.ConvR1C1toA1(currFV.R, currFV.C))
+	log.Errorf("%s|%s(%s)", currFV.FileName, currFV.SheetName, util.R1C1ToA1(currFV.R, currFV.C))
 	return false
 
 }
