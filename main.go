@@ -41,13 +41,13 @@ var paramPackageName = flag.String("package", "", "override the package name in 
 var paramClientOnly = flag.Bool("client_only", false, "output client config only (*.json)")
 var paramProtoImportFiles = flag.String("protoimport", "", "import .proto files paths (*.proto)")
 var paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
+var paramFieldTags = flag.String("fieldOutTag", "", "filter field OutTags (separator: ';')")
 
-const Version = "2.8.9.20190705"
+const Version = "2.8.9.20200615"
 
 func main() {
 
 	flag.Parse()
-
 	// 版本
 	if *paramVersion {
 		fmt.Println(Version)
@@ -86,6 +86,10 @@ func main() {
 
 		if *paramProtoOutputIgnoreFiles != "" {
 			g.ProtoOutputIgnoreFiles = strings.Split(*paramProtoOutputIgnoreFiles, ";")
+		}
+
+		if len(*paramFieldTags) != 0 {
+			v2.FieldOutTags =  strings.Split(*paramFieldTags, ";")
 		}
 
 		if *paramProtoOut != "" {
