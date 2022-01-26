@@ -18,6 +18,7 @@ package {{.Package}};
 {{range .Imports}}
 import "{{.}}";
 {{end}}
+{{if .GoPackage}}option go_package = "{{.GoPackage}}";{{end}}
 {{range .Enums}}
 // Defined in table: {{.DefinedTable}}
 enum {{.Name}}
@@ -98,6 +99,7 @@ type protoFileModel struct {
 	Messages     []protoDescriptor
 	Enums        []protoDescriptor
 	Imports      []string
+	GoPackage    string
 	IgnoreFiles  []string
 }
 
@@ -127,6 +129,7 @@ func (self *protoPrinter) Run(g *Globals) *Stream {
 	m.ProtoVersion = g.ProtoVersion
 	m.ToolVersion = g.Version
 	m.Imports = g.ProtoImportFiles
+	m.GoPackage = g.ProtoGoPackage
 	m.IgnoreFiles = g.ProtoOutputIgnoreFiles
 
 	// 遍历所有类型

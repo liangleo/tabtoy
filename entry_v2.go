@@ -21,6 +21,7 @@ var (
 	paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
 
 	paramProtoImportFiles       = flag.String("protoimport", "", "import .proto files paths (*.proto)")
+	paramGoPackage              = flag.String("gopackage", "", "import go package")
 	paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
 	paramFieldTags              = flag.String("fieldOutTag", "", "filter field OutTags (separator: ';')")
 )
@@ -91,6 +92,10 @@ func V2Entry() {
 
 	if *paramProtoImportFiles != "" {
 		g.ProtoImportFiles = strings.Split(*paramProtoImportFiles, ",")
+	}
+
+	if *paramGoPackage != "" {
+		g.ProtoGoPackage = *paramGoPackage
 	}
 
 	if *paramProtoOutputIgnoreFiles != "" {
