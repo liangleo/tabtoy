@@ -29,4 +29,4 @@ tabtoy
 protoc
 ~*.xlsx
 .idea
-bins
+bin

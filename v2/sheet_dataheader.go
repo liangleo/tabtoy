@@ -9,7 +9,6 @@ import (
 	"github.com/davyxu/tabtoy/v2/model"
 )
 
-var FieldOutTags []string  //需要过滤标签
 /*
 	Sheet数据表单类型头
 
@@ -23,6 +22,8 @@ const (
 	DataSheetHeader_Comment   = 3 // 用户注释
 	DataSheetHeader_DataBegin = 4 // 数据开始
 )
+
+var FieldOutTags []string //需要过滤标签
 
 type DataHeader struct {
 
@@ -180,7 +181,7 @@ func (self *DataHeader) addHeaderElement(he *DataHeaderElement, localFD *model.F
 	// #开头表示注释, 跳过
 	if strings.Index(he.FieldName, "#") == 0 {
 		skip = true
-	}else if len(FieldOutTags) != 0 {
+	} else if len(FieldOutTags) != 0 {
 		// 这里对属性标签做一下过滤
 		meta := model.NewMetaInfo()
 		if err := meta.Parse(he.FieldMeta); err != nil {
@@ -190,16 +191,16 @@ func (self *DataHeader) addHeaderElement(he *DataHeaderElement, localFD *model.F
 		outTags := meta.GetString("OutTags")
 		if len(outTags) != 0 {
 			tagMap := make(map[string]bool)
-			for _,v := range strings.Split(outTags, ";"){
+			for _, v := range strings.Split(outTags, ";") {
 				tagMap[v] = true
 			}
-			for _,v := range  FieldOutTags {
+			for _, v := range FieldOutTags {
 				if tagMap[v] {
 					continue
 				}
 				//过滤掉(这里是在原来的字段上加上#，方便后面的处理)
-				he.FieldName  = "#" + he.FieldName
-				def.Name  = "#" + def.Name
+				he.FieldName = "#" + he.FieldName
+				def.Name = "#" + def.Name
 				skip = true
 				break
 			}

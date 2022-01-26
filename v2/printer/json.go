@@ -42,7 +42,7 @@ func (self *jsonPrinter) Run(g *Globals) *Stream {
 			bf.Printf(", \n")
 		}
 
-		if !printTableJson(bf, tab, g.ParamClientOnly) {
+		if !printTableJson(bf, tab) {
 			return nil
 		}
 
@@ -62,7 +62,7 @@ func inArray(field string, fields []string) bool {
 	return false
 }
 
-func printTableJson(bf *Stream, tab *model.Table, clientOnly bool) bool {
+func printTableJson(bf *Stream, tab *model.Table) bool {
 
 	bf.Printf("	\"%s\":[\n", tab.LocalFD.Name)
 
@@ -76,11 +76,7 @@ func printTableJson(bf *Stream, tab *model.Table, clientOnly bool) bool {
 		// 遍历每一列
 		for rootFieldIndex, node := range r.Nodes {
 
-			if clientOnly && node.ClientIgnore {
-				continue
-			}
-
-			if node.SugguestIgnore {
+			if node.SugguestIgnore && !node.IsRepeated {
 				continue
 			}
 

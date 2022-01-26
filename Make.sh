@@ -9,13 +9,17 @@ BuildBinary()
 {
   set -e
   TargetDir=bin/"${1}"
+  BinaryExt=""
+  if [ "${1}" == "windows" ]; then
+    BinaryExt=".exe"
+  fi
   mkdir -p "${TargetDir}"
   export GOOS=${1}
   BuildTime=$(date -R)
   GitCommit=$(git rev-parse HEAD)
   VersionString="-X \"${BuildSourcePackage}.BuildTime=${BuildTime}\" -X \"${BuildSourcePackage}.Version=${Version}\" -X \"${BuildSourcePackage}.GitCommit=${GitCommit}\""
 
-  go build -v -p 4 -o "${TargetDir}"/${BinaryName} -ldflags "${VersionString}" ${BinaryPackage}
+  go build -v -p 4 -o "${TargetDir}"/"${BinaryName}${BinaryExt}" -ldflags "${VersionString}" ${BinaryPackage}
   PackageDir=$(pwd)
   cd "${TargetDir}"
   tar zcvf "${PackageDir}"/${BinaryName}-${Version}-"${1}"-x86_64.tar.gz ${BinaryName}

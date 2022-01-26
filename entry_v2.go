@@ -2,11 +2,13 @@ package main
 
 import (
 	"flag"
+	"os"
+	"strings"
+
 	"github.com/davyxu/tabtoy/build"
-	"github.com/davyxu/tabtoy/v2"
+	v2 "github.com/davyxu/tabtoy/v2"
 	"github.com/davyxu/tabtoy/v2/i18n"
 	"github.com/davyxu/tabtoy/v2/printer"
-	"os"
 )
 
 // v2特有
@@ -17,6 +19,10 @@ var (
 	paramLuaTabHeader    = flag.String("luatabheader", "", "output string to lua tab header")
 
 	paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
+
+	paramProtoImportFiles       = flag.String("protoimport", "", "import .proto files paths (*.proto)")
+	paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
+	paramFieldTags              = flag.String("fieldOutTag", "", "filter field OutTags (separator: ';')")
 )
 
 func V2Entry() {
@@ -81,6 +87,18 @@ func V2Entry() {
 
 	if *paramModifyList != "" {
 		g.AddOutputType("modlist", *paramModifyList)
+	}
+
+	if *paramProtoImportFiles != "" {
+		g.ProtoImportFiles = strings.Split(*paramProtoImportFiles, ",")
+	}
+
+	if *paramProtoOutputIgnoreFiles != "" {
+		g.ProtoOutputIgnoreFiles = strings.Split(*paramProtoOutputIgnoreFiles, ";")
+	}
+
+	if len(*paramFieldTags) != 0 {
+		v2.FieldOutTags = strings.Split(*paramFieldTags, ";")
 	}
 
 	if !v2.Run(g) {
