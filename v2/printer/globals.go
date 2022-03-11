@@ -13,17 +13,18 @@ type TableIndex struct {
 }
 
 type Globals struct {
-	Version            string
-	InputFileList      []interface{}
-	ParaMode           bool
-	CacheDir           string
-	UseCache           bool
-	ProtoVersion       int
-	LuaEnumIntValue    bool
-	LuaTabHeader       string
-	GenCSSerailizeCode bool
-	PackageName        string
-	ModList            []string
+	Version             string
+	InputFileList       []interface{}
+	ParaMode            bool
+	CacheDir            string
+	UseCache            bool
+	ProtoVersion        int
+	LuaEnumIntValue     bool
+	LuaTabHeader        string
+	LuaFilterEmptyField bool
+	GenCSSerailizeCode  bool
+	PackageName         string
+	ModList             []string
 
 	ProtoImportFiles       []string
 	ProtoGoPackage         string

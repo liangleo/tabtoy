@@ -15,8 +15,9 @@ import (
 var (
 	paramProtoVersion = flag.Int("protover", 3, "output .proto file version, 2 or 3")
 
-	paramLuaEnumIntValue = flag.Bool("luaenumintvalue", false, "use int type in lua enum value")
-	paramLuaTabHeader    = flag.String("luatabheader", "", "output string to lua tab header")
+	paramLuaEnumIntValue     = flag.Bool("luaenumintvalue", false, "use int type in lua enum value")
+	paramLuaTabHeader        = flag.String("luatabheader", "", "output string to lua tab header")
+	paramLuaFilterEmptyField = flag.Bool("luafilteremptyfield", false, "output filter empty value filed")
 
 	paramGenCSharpBinarySerializeCode = flag.Bool("cs_gensercode", true, "generate c# binary serialize code, default is true")
 
@@ -47,6 +48,7 @@ func V2Entry() {
 	g.ProtoVersion = *paramProtoVersion
 	g.LuaEnumIntValue = *paramLuaEnumIntValue
 	g.LuaTabHeader = *paramLuaTabHeader
+	g.LuaFilterEmptyField = *paramLuaFilterEmptyField
 	g.GenCSSerailizeCode = *paramGenCSharpBinarySerializeCode
 	g.PackageName = *paramPackageName
 
