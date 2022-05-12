@@ -20,7 +20,8 @@ type FieldValue struct {
 
 // 对应record
 type LineData struct {
-	Values []*FieldValue
+	Values     []*FieldValue
+	NeedFilter bool
 }
 
 func (self *LineData) Len() int {
@@ -51,7 +52,8 @@ func NewLineData() *LineData {
 
 // 对应table
 type DataModel struct {
-	Lines []*LineData
+	Lines        []*LineData
+	FilterFields map[string]struct{}
 }
 
 func (self *DataModel) Add(data *LineData) {

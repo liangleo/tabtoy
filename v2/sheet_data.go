@@ -13,6 +13,113 @@ import (
 
 */
 
+type outputDataFilterTag struct {
+	tableName        string
+	fieldName        string
+	filterConfIDs    map[string]struct{}
+	filterFieldNames map[string]struct{}
+}
+
+var outputDataFilterTags map[string]map[string]map[string]map[string]struct{}
+
+func parseOutputDataFilterValue(node *model.Node) map[string]struct{} {
+	values := make(map[string]struct{}, len(node.Child))
+	// 普通值
+	if node.Type != model.FieldType_Struct {
+		if node.IsRepeated {
+			// repeated 值序列
+			for _, valueNode := range node.Child {
+				values[valueNode.Value] = struct{}{}
+			}
+		} else {
+			// 单值
+			valueNode := node.Child[0]
+			values[valueNode.Value] = struct{}{}
+		}
+	} else {
+		// 遍历repeated的结构体
+		for _, structNode := range node.Child {
+			// 遍历一个结构体的字段
+			for _, fieldNode := range structNode.Child {
+				if fieldNode.SugguestIgnore {
+					continue
+				}
+				// 值节点总是在第一个
+				valueNode := fieldNode.Child[0]
+				values[valueNode.Value] = struct{}{}
+			}
+		}
+	}
+	return values
+}
+
+func InitOutputDataFilterTags(fileName string) {
+	file, _ := NewFile(fileName, "")
+	file.ExportLocalType(nil)
+
+	dataModel := model.NewDataModel()
+	file.ExportData(dataModel, nil)
+
+	tab := model.NewTable()
+	tab.LocalFD = file.LocalFD
+	mergeValues(dataModel, tab, file)
+	// 遍历每一行
+	outputDataFilterTags = make(map[string]map[string]map[string]map[string]struct{})
+	for _, r := range tab.Recs {
+		filterTag := &outputDataFilterTag{}
+		for _, node := range r.Nodes {
+			if node.SugguestIgnore && !node.IsRepeated {
+				continue
+			}
+			if node.Child == nil || len(node.Child) == 0 {
+				continue
+			}
+			if node.Type == model.FieldType_Struct {
+				continue
+			}
+
+			switch node.Name {
+			case "TableName":
+				valueNode := node.Child[0]
+				filterTag.tableName = valueNode.Value
+			case "FieldName":
+				valueNode := node.Child[0]
+				filterTag.fieldName = valueNode.Value
+			case "FilterConfID":
+				filterTag.filterConfIDs = parseOutputDataFilterValue(node)
+			case "FilterFieldName":
+				filterTag.filterFieldNames = parseOutputDataFilterValue(node)
+			default:
+			}
+		}
+		if outputDataFilterTags[filterTag.tableName] == nil {
+			outputDataFilterTags[filterTag.tableName] = make(map[string]map[string]map[string]struct{})
+		}
+		if outputDataFilterTags[filterTag.tableName][filterTag.fieldName] == nil {
+			outputDataFilterTags[filterTag.tableName][filterTag.fieldName] = make(map[string]map[string]struct{})
+		}
+		for confID := range filterTag.filterConfIDs {
+			outputDataFilterTags[filterTag.tableName][filterTag.fieldName][confID] = filterTag.filterFieldNames
+		}
+	}
+}
+
+func getOutputDataFilterFields(tableName, fieldName, fieldValue string) (map[string]struct{}, bool) {
+	tableFields, exist := outputDataFilterTags[tableName]
+	if !exist {
+		return nil, false
+	}
+	confFields, exist := tableFields[fieldName]
+	if !exist {
+		return nil, false
+	}
+	fields, exist := confFields[fieldValue]
+	if !exist {
+		return nil, false
+	}
+	return fields, true
+}
+
 type DataSheet struct {
 	*Sheet
 }
@@ -41,7 +148,6 @@ func (self *DataSheet) Export(file *File, dataModel *model.DataModel, dataHeader
 
 // 导出以行数据延展的表格(普通表格)
 func (self *DataSheet) exportRowMajor(file *File, dataModel *model.DataModel, dataHeader, parentHeader *DataHeader) bool {
-
 	// 是否继续读行
 	var readingLine bool = true
 
@@ -128,6 +234,17 @@ func (self *DataSheet) exportRowMajor(file *File, dataModel *model.DataModel, da
 			}
 		}
 
+		// 判断是否需要过滤此行数据
+		for _, field := range line.Values {
+			fields, exist := getOutputDataFilterFields(file.FileName, field.FieldDef.Name, field.RawValue)
+			if !exist {
+				continue
+			}
+			dataModel.FilterFields = fields
+			line.NeedFilter = true
+			break
+		}
+
 		dataModel.Add(line)
 
 	}
@@ -153,6 +270,7 @@ func (self *DataSheet) processLine(fieldDef *model.FieldDescriptor, line *model.
 	}
 
 	var rawValue string
+
 	// 浮点数按本来的格式输出
 	if fieldDef.Type == model.FieldType_Float && !fieldDef.IsRepeated {
 		rawValue = self.GetCellDataAsNumeric(self.Row, self.Column)

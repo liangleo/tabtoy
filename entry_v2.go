@@ -25,6 +25,7 @@ var (
 	paramGoPackage              = flag.String("gopackage", "", "import go package")
 	paramProtoOutputIgnoreFiles = flag.String("protooutputignorefile", "", "ignore output .proto files (*.proto)")
 	paramFieldTags              = flag.String("fieldOutTag", "", "filter field OutTags (separator: ';')")
+	paramClientOutputDataFilter = flag.String("clientOutputDataFilter", "", "filter client output data")
 )
 
 func V2Entry() {
@@ -106,6 +107,10 @@ func V2Entry() {
 
 	if len(*paramFieldTags) != 0 {
 		v2.FieldOutTags = strings.Split(*paramFieldTags, ";")
+	}
+
+	if *paramClientOutputDataFilter != "" {
+		v2.InitOutputDataFilterTags(*paramClientOutputDataFilter)
 	}
 
 	if !v2.Run(g) {

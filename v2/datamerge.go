@@ -78,7 +78,16 @@ func mergeValues(modelData *model.DataModel, tab *model.Table, checker model.Glo
 
 			}
 
-			if !coloumnProcessor(checker, record, fv.FieldDef, fv.RawValue, sugguestIgnore) {
+			raw := fv.RawValue
+			if line.NeedFilter {
+				_, exist := modelData.FilterFields[fv.FieldDef.Name]
+				if exist {
+					raw = ""
+					sugguestIgnore = true
+				}
+			}
+
+			if !coloumnProcessor(checker, record, fv.FieldDef, raw, sugguestIgnore) {
 				goto ErrorStop
 			}
 
