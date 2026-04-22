@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tabtoy" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="tabtoy" />
+    <working_directory value="$PROJECT_DIR$/bin" />
+    <parameters value="--mode=exportorv2 --protover=3 --fieldOutTag=s --protooutputignorefile=GameTypeConf --protoimport=config/game_type.proto --gopackage=yihua.com/games/live/gameproto/config --proto_out=./pb/config/game_base_config.proto --pbt_out=./pbt/config/game_base_config.pbt --combinename=GameBaseConfig --lan=zh_cn game_type_conf.xlsx global_conf.xlsx greeting_message_conf.xlsx" />
+    <kind value="PACKAGE" />
+    <package value="github.com/davyxu/tabtoy" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <output_directory value="$PROJECT_DIR$/bin" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tabtoy-filter" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="tabtoy" />
+    <working_directory value="$PROJECT_DIR$/bin" />
+    <parameters value="--mode=exportorv2 --protover=3 --fieldOutTag=c --luafilteremptyfield=true --gopackage=sanguosha.com/games/sgs/gameproto/gameconf --proto_out=.\game_base_config.proto --pbt_out=.\game_base_config.pbt --json_out=.\game_base_config.json --lua_out=.\game_base_config.lua --combinename=DoNotUseThis --lan=zh_cn --clientOutputDataFilter=sgs_client_filter_conf.xlsx sgs_game_type_conf.xlsx sgs_global_conf.xlsx sgs_general_conf.xlsx" />
+    <kind value="PACKAGE" />
+    <package value="github.com/davyxu/tabtoy" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <output_directory value="$PROJECT_DIR$/bin" />
+    <method v="2" />
+  </configuration>
+</component>
