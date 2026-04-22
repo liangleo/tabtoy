@@ -6,16 +6,17 @@ const Excel2006MaxRowCount = 1048576
 const Excel2006MaxRowIndex = Excel2006MaxRowCount - 1
 
 type Col struct {
-	Min            int
-	Max            int
-	Hidden         bool
-	Width          float64
-	Collapsed      bool
-	OutlineLevel   uint8
-	numFmt         string
-	parsedNumFmt   *parsedNumberFormat
-	style          *Style
-	DataValidation []*xlsxCellDataValidation
+	Min             int
+	Max             int
+	Hidden          bool
+	Width           float64
+	Collapsed       bool
+	OutlineLevel    uint8
+	numFmt          string
+	parsedNumFmt    *parsedNumberFormat
+	style           *Style
+	DataValidation  []*xlsxCellDataValidation
+	defaultCellType *CellType
 }
 
 // SetType will set the format string of a column based on the type that you want to set it to.
@@ -39,6 +40,13 @@ func (c *Col) SetType(cellType CellType) {
 	case CellTypeStringFormula:
 		c.numFmt = builtInNumFmt[builtInNumFmtIndex_STRING]
 	}
+}
+
+// SetCellMetadata sets the CellMetadata related attributes
+// of a Col
+func (c *Col) SetCellMetadata(cellMetadata CellMetadata) {
+	c.defaultCellType = &cellMetadata.cellType
+	c.SetStreamStyle(cellMetadata.streamStyle)
 }
 
 // GetStyle returns the Style associated with a Col
@@ -96,4 +104,18 @@ func (c *Col) SetDataValidation(dd *xlsxCellDataValidation, start, end int) {
 // This will apply to the rest of the rest of the column.
 func (c *Col) SetDataValidationWithStart(dd *xlsxCellDataValidation, start int) {
 	c.SetDataValidation(dd, start, -1)
+}
+
+// SetStreamStyle sets the style and number format id to the ones specified in the given StreamStyle
+func (c *Col) SetStreamStyle(style StreamStyle) {
+	c.style = style.style
+	// TODO: `style.xNumFmtId` could be out of the range of the builtin map
+	// returning "" which may not be a valid formatCode
+	c.numFmt = builtInNumFmt[style.xNumFmtId]
+}
+
+func (c *Col) GetStreamStyle() StreamStyle {
+	// TODO: Like `SetStreamStyle`, `numFmt` could be out of the range of the builtin inv map
+	// returning 0 which maps to formatCode "general"
+	return StreamStyle{builtInNumFmtInv[c.numFmt], c.style}
 }

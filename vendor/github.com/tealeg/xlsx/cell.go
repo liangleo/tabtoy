@@ -39,6 +39,19 @@ func (ct CellType) Ptr() *CellType {
 	return &ct
 }
 
+func (ct *CellType) fallbackTo(cellData string, fallback CellType) CellType {
+	if ct != nil {
+		switch *ct {
+		case CellTypeNumeric:
+			if _, err := strconv.ParseFloat(cellData, 64); err == nil {
+				return *ct
+			}
+		default:
+		}
+	}
+	return fallback
+}
+
 // Cell is a high level structure intended to provide user access to
 // the contents of Cell within an xlsx.Row.
 type Cell struct {
@@ -377,4 +390,29 @@ func (c *Cell) FormattedValue() (string, error) {
 // SetDataValidation set data validation
 func (c *Cell) SetDataValidation(dd *xlsxCellDataValidation) {
 	c.DataValidation = dd
+}
+
+// CellMetadata represents anything attributable to a cell
+// except for the cell data itself. For example, it is used
+// in StreamFileBuilder.AddSheetWithDefaultColumnMetadata to
+// associate default attributes for cells in a particular column
+type CellMetadata struct {
+	cellType    CellType
+	streamStyle StreamStyle
+}
+
+var (
+	DefaultStringCellMetadata  CellMetadata
+	DefaultNumericCellMetadata CellMetadata
+	DefaultDecimalCellMetadata CellMetadata
+	DefaultIntegerCellMetadata CellMetadata
+	DefaultDateCellMetadata    CellMetadata
+)
+
+func MakeCellMetadata(cellType CellType, streamStyle StreamStyle) CellMetadata {
+	return CellMetadata{cellType, streamStyle}
+}
+
+func (cm CellMetadata) Ptr() *CellMetadata {
+	return &cm
 }
